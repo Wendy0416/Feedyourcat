@@ -14,8 +14,8 @@ int sensor2Pin = A2;
 int sensor2Value;
 
 
-int minimumValue1 = 900;   //Sensor 1 threshold
-int minimumValue2 = 1300;   //Sensor 2 threshold 
+int minimumValue1 = 900;   //Sensor 1 
+int minimumValue2 = 1300;   //Sensor 2 more sensitive
 
 //LED variables
 int led1Pin = 12;
