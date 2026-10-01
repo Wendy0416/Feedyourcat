@@ -1,0 +1,95 @@
+/*
+Two Sensor Compare
+
+Builds on twoSensorSerial.
+The two sensors are compared against each other. Whichever one has the
+HIGHER reading wins, and only that sensor's LED turns on.
+Each sensor has its OWN minimum value, so a sensor that reads high
+when nobody is pressing it can be tuned separately.
+If neither sensor is above its minimum, both LEDs stay off.
+
+Pin A1 : Sensor 1  ->  Pin 12 : LED 1
+Pin A2 : Sensor 2  ->  Pin 27 : LED 2
+
+Remember: analogRead() on the ESP32 gives a value from 0 - 4095
+analogWrite() takes a value from 0 - 255
+Set the Serial Monitor to 9600 baud to see the values.
+*/
+
+//Sensor variables
+int sensor1Pin = A1;
+int sensor1Value;
+
+int sensor2Pin = A2;
+int sensor2Value;
+
+//Each sensor has its own minimum value.
+//Below its minimum, that sensor counts as untouched.
+//To tune: open the Serial Monitor, don't touch anything, and look at
+//each sensor's reading. Set its minimum a bit ABOVE that idle reading.
+int minimumValue1 = 900;   //Sensor 1 threshold
+int minimumValue2 = 1300;   //Sensor 2 threshold 
+
+//LED variables
+int led1Pin = 12;
+int led1Value;
+
+int led2Pin = 27;
+int led2Value;
+
+//The brightness for a winning and a losing LED (0 - 255)
+int onBrightness = 255;
+int offBrightness = 0;
+
+void setup()
+{
+  Serial.begin(9600);
+
+  pinMode(led1Pin, OUTPUT);
+  pinMode(led2Pin, OUTPUT);
+}
+
+void loop()
+{
+  //read both sensors (0 - 4095)
+  sensor1Value = analogRead(sensor1Pin);
+  sensor2Value = analogRead(sensor2Pin);
+
+  //is each sensor above its own minimum?
+  bool sensor1Active = sensor1Value > minimumValue1;
+  bool sensor2Active = sensor2Value > minimumValue2;
+
+  //decide which LED wins
+  if (!sensor1Active && !sensor2Active)
+  {
+    //neither sensor is active
+    led1Value = offBrightness;
+    led2Value = offBrightness;
+  }
+  else if (sensor1Active && (!sensor2Active || sensor1Value > sensor2Value))
+  {
+    //Sensor 1 is active and wins
+    led1Value = onBrightness;
+    led2Value = offBrightness;
+  }
+  else
+  {
+    //Sensor 2 is active and wins
+    led1Value = offBrightness;
+    led2Value = onBrightness;
+  }
+
+  //set the LEDs
+  analogWrite(led1Pin, led1Value);
+  analogWrite(led2Pin, led2Value);
+
+  //print the sensor and LED values on one line
+  Serial.print("Sensor 1: ");
+  Serial.print(sensor1Value);
+  Serial.print("   LED 1: ");
+  Serial.print(led1Value);
+  Serial.print("   Sensor 2: ");
+  Serial.print(sensor2Value);
+  Serial.print("   LED 2: ");
+  Serial.println(led2Value);
+}
