@@ -1,8 +1,8 @@
 /*
 Two Sensor Comparison
 
-Pin A1 : Sensor 1  ->  Pin 12 : LED 1
-Pin A2 : Sensor 2  ->  Pin 27 : LED 2
+Pin A1 : Sensor 1  ->  Pin 12 : LED 1  left
+Pin A2 : Sensor 2  ->  Pin 27 : LED 2  right
 
 */
 
